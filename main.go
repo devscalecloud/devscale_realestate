@@ -69,6 +69,24 @@ var users = map[string]User{
 		FirstName: "Chimezie",
 		LastName:  "Ogbu",
 	},
+	"peter": {
+		Username:  "peter",
+		Password:  demoPassword,
+		FirstName: "Peter",
+		LastName:  "",
+	},
+	"juwon": {
+		Username:  "juwon",
+		Password:  demoPassword,
+		FirstName: "Juwon",
+		LastName:  "",
+	},
+	"fisayo": {
+		Username:  "fisayo",
+		Password:  demoPassword,
+		FirstName: "Faboya",
+		LastName:  "Fisayo",
+	},
 }
 
 var properties = []Property{
