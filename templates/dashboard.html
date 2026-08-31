@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevScale Real Estate — Listings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --cream: #f7f3ee;
+            --cream-deep: #efe7db;
+            --paper: #fffdf9;
+            --ink: #241f1a;
+            --ink-soft: #5c5449;
+            --ink-faint: #9a8f7c;
+            --terracotta: #c1552c;
+            --terracotta-d: #a8451f;
+            --terracotta-t: rgba(193, 85, 44, 0.1);
+            --pine: #33473a;
+            --pine-t: rgba(51, 71, 58, 0.1);
+            --line: #e2d8c8;
+            --success: #33473a;
+            --success-bg: #eaf0ea;
+            --serif: 'Fraunces', Georgia, serif;
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: var(--cream);
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        /* ========= MASTHEAD ========= */
+        .masthead {
+            background: var(--paper);
+            border-bottom: 1px solid var(--line);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .masthead-inner {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 32px;
+            height: 74px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mark {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--serif);
+            font-size: 19px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .mark svg {
+            width: 24px;
+            height: 24px;
+            color: var(--terracotta);
+        }
+
+        .mark em {
+            font-style: normal;
+            color: var(--terracotta);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .nav-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--cream-deep);
+            border: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--serif);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--terracotta);
+        }
+
+        .nav-user-name {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .nav-user-role {
+            font-size: 11px;
+            color: var(--ink-faint);
+        }
+
+        .btn-logout {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 16px;
+            background: transparent;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: var(--ink-soft);
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+        }
+
+        .btn-logout svg { width: 14px; height: 14px; }
+
+        .btn-logout:hover {
+            background: var(--ink);
+            border-color: var(--ink);
+            color: var(--paper);
+        }
+
+        /* ========= EDITORIAL HEADER ========= */
+        .editorial-header {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 56px 32px 36px;
+        }
+
+        .issue-line {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--terracotta);
+            margin-bottom: 16px;
+        }
+
+        .editorial-header h1 {
+            font-family: var(--serif);
+            font-size: clamp(34px, 4.5vw, 52px);
+            font-weight: 600;
+            letter-spacing: -1px;
+            line-height: 1.05;
+            max-width: 700px;
+        }
+
+        .editorial-header h1 em {
+            font-style: italic;
+            color: var(--terracotta);
+            font-weight: 500;
+        }
+
+        .editorial-header p.lede {
+            font-size: 15.5px;
+            color: var(--ink-soft);
+            line-height: 1.6;
+            max-width: 520px;
+            margin-top: 16px;
+        }
+
+        /* ========= FILTER RAIL ========= */
+        .filter-rail {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0 32px 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .filter-tab {
+            padding: 10px 4px;
+            margin-bottom: -1px;
+            border: none;
+            border-bottom: 2px solid transparent;
+            background: transparent;
+            color: var(--ink-faint);
+            font-family: var(--serif);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+            margin-right: 22px;
+        }
+
+        .filter-tab:hover { color: var(--ink); }
+
+        .filter-tab.active {
+            color: var(--ink);
+            border-color: var(--terracotta);
+        }
+
+        /* ========= MASONRY GRID ========= */
+        .page {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 40px 32px 80px;
+        }
+
+        .property-grid {
+            columns: 3 320px;
+            column-gap: 26px;
+        }
+
+        .property-card {
+            break-inside: avoid;
+            margin-bottom: 26px;
+            background: var(--paper);
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            overflow: hidden;
+            display: block;
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .property-card:hover {
+            box-shadow: 0 18px 40px rgba(36, 31, 26, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* vary image heights for a masonry rhythm */
+        .property-card:nth-child(3n+1) .property-image-wrap { height: 260px; }
+        .property-card:nth-child(3n+2) .property-image-wrap { height: 200px; }
+        .property-card:nth-child(3n) .property-image-wrap { height: 320px; }
+
+        .property-image-wrap {
+            position: relative;
+            background: var(--cream-deep);
+        }
+
+        .property-image-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .property-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            padding: 5px 12px;
+            border-radius: 2px;
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .property-badge.sale {
+            background: var(--terracotta);
+            color: var(--paper);
+        }
+
+        .property-badge.rent {
+            background: var(--pine);
+            color: var(--paper);
+        }
+
+        .property-body { padding: 20px 22px 22px; }
+
+        .property-location {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 8px;
+        }
+
+        .property-title {
+            font-family: var(--serif);
+            font-size: 21px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            color: var(--ink);
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .property-desc {
+            font-size: 13.5px;
+            color: var(--ink-soft);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .property-stats {
+            display: flex;
+            gap: 16px;
+            padding: 14px 0;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 18px;
+        }
+
+        .property-stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12.5px;
+            color: var(--ink-soft);
+        }
+
+        .property-stat svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: var(--ink-faint);
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        .property-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .property-price {
+            font-family: var(--serif);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--ink);
+            letter-spacing: -0.3px;
+        }
+
+        .property-price small {
+            font-family: var(--sans);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--ink-faint);
+        }
+
+        .btn-action {
+            padding: 10px 18px;
+            border-radius: 2px;
+            border: 1.5px solid var(--ink);
+            background: transparent;
+            color: var(--ink);
+            font-family: var(--sans);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            white-space: nowrap;
+        }
+
+        .btn-action:hover {
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        .btn-action.rent {
+            border-color: var(--terracotta);
+            color: var(--terracotta);
+        }
+
+        .btn-action.rent:hover {
+            background: var(--terracotta);
+            color: var(--paper);
+        }
+
+        /* ========= MODAL ========= */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(36, 31, 26, 0.55);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .modal-overlay.open { display: flex; }
+
+        .modal-box {
+            background: var(--paper);
+            border-radius: 2px;
+            width: min(460px, 100%);
+            overflow: hidden;
+            box-shadow: 0 30px 70px rgba(36, 31, 26, 0.3);
+        }
+
+        .modal-header {
+            background: var(--ink);
+            padding: 24px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left { min-width: 0; }
+
+        .modal-kicker {
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #f0c9a8;
+            margin-bottom: 6px;
+        }
+
+        .modal-title {
+            font-family: var(--serif);
+            font-size: 19px;
+            font-weight: 600;
+            color: var(--paper);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 18px;
+            line-height: 1;
+            transition: background 0.15s, color 0.15s;
+            flex-shrink: 0;
+        }
+
+        .modal-close:hover {
+            background: var(--terracotta);
+            border-color: var(--terracotta);
+            color: var(--paper);
+        }
+
+        .modal-body { padding: 28px; }
+
+        .modal-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--cream);
+            border-left: 3px solid var(--terracotta);
+            border-radius: 2px;
+            padding: 16px 18px;
+            margin-bottom: 22px;
+        }
+
+        .modal-summary-label {
+            font-size: 11.5px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 4px;
+        }
+
+        .modal-summary-amount {
+            font-family: var(--serif);
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .card-demo-hint {
+            font-size: 12px;
+            color: var(--ink-faint);
+            margin-bottom: 22px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .card-demo-hint strong {
+            color: var(--ink-soft);
+            font-style: normal;
+        }
+
+        .modal-field { margin-bottom: 18px; }
+        .modal-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        .modal-label {
+            display: block;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px 0;
+            font-size: 15px;
+            font-family: var(--sans);
+            color: var(--ink);
+            background: transparent;
+            border: none;
+            border-bottom: 1.5px solid var(--line);
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .modal-input::placeholder { color: #b6ab99; }
+        .modal-input:focus { border-color: var(--terracotta); }
+
+        .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 14px;
+            background: transparent;
+            border: 1.5px solid var(--line);
+            border-radius: 2px;
+            font-family: var(--sans);
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--ink-soft);
+            cursor: pointer;
+            transition: border-color 0.15s, color 0.15s;
+        }
+
+        .btn-cancel:hover { border-color: var(--ink); color: var(--ink); }
+
+        .btn-pay {
+            flex: 2;
+            padding: 14px;
+            background: var(--terracotta);
+            border: none;
+            border-radius: 2px;
+            font-family: var(--sans);
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--paper);
+            cursor: pointer;
+            transition: background 0.15s;
+            letter-spacing: 0.2px;
+        }
+
+        .btn-pay:hover { background: var(--terracotta-d); }
+        .btn-pay:disabled { opacity: 0.6; cursor: default; }
+
+        /* ========= SUCCESS VIEW ========= */
+        .success-view { display: none; text-align: center; padding: 6px 0 4px; }
+
+        .success-icon-lg {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: var(--success-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .success-icon-lg svg { width: 28px; height: 28px; fill: var(--success); }
+
+        .success-view h3 {
+            font-family: var(--serif);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 8px;
+        }
+
+        .success-view p {
+            font-size: 14px;
+            color: var(--ink-soft);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        /* ========= RESPONSIVE ========= */
+        @media (max-width: 900px) {
+            .property-grid { columns: 2 280px; }
+        }
+
+        @media (max-width: 680px) {
+            .masthead-inner { padding: 0 20px; }
+            .nav-user-name, .nav-user-role { display: none; }
+            .editorial-header { padding: 40px 20px 28px; }
+            .filter-rail { padding: 0 20px 24px; }
+            .page { padding: 32px 20px 60px; }
+            .property-grid { columns: 1; }
+            .modal-field-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ========= MASTHEAD ========= -->
+    <header class="masthead">
+        <div class="masthead-inner">
+            <div class="mark">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 8h-2.5v9h-5v-6h-3v6h-5v-9H3l9-8z" /></svg>
+                DevScale <em>Real Estate</em>
+            </div>
+            <div class="nav-right">
+                <div class="nav-user">
+                    <div class="nav-avatar">{{initials .User.FirstName .User.LastName}}</div>
+                    <div>
+                        <div class="nav-user-name">{{fullName .User.FirstName .User.LastName}}</div>
+                        <div class="nav-user-role">Buyer &amp; Tenant</div>
+                    </div>
+                </div>
+                <a href="/logout" class="btn-logout">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========= EDITORIAL HEADER ========= -->
+    <div class="editorial-header">
+        <div class="issue-line">Welcome back, {{.User.FirstName}}</div>
+        <h1>Homes worth <em>living in</em>, curated just for you.</h1>
+        <p class="lede">Browse our current collection of properties for purchase and rent — every listing checked out and ready for its next chapter.</p>
+    </div>
+
+    <!-- ========= FILTER RAIL ========= -->
+    <div class="filter-rail">
+        <button class="filter-tab active" data-filter="all" onclick="filterProperties('all', this)">All Listings</button>
+        <button class="filter-tab" data-filter="sale" onclick="filterProperties('sale', this)">For Sale</button>
+        <button class="filter-tab" data-filter="rent" onclick="filterProperties('rent', this)">For Rent</button>
+    </div>
+
+    <!-- ========= PAGE ========= -->
+    <main class="page">
+        <div class="property-grid" id="propertyGrid">
+            {{range .Properties}}
+            <div class="property-card" data-listing="{{.Listing}}">
+                <div class="property-image-wrap">
+                    <img src="{{.Image}}" alt="{{.Title}}" loading="lazy">
+                    {{if eq .Listing "sale"}}
+                    <span class="property-badge sale">For Sale</span>
+                    {{else}}
+                    <span class="property-badge rent">For Rent</span>
+                    {{end}}
+                </div>
+                <div class="property-body">
+                    <div class="property-location">{{.Location}}</div>
+                    <div class="property-title">{{.Title}}</div>
+                    <p class="property-desc">{{.Description}}</p>
+                    <div class="property-stats">
+                        <div class="property-stat">
+                            <svg viewBox="0 0 24 24"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18h18"/><path d="M5 10V7a2 2 0 0 1 2-2h3v5"/></svg>
+                            {{.Beds}} Beds
+                        </div>
+                        <div class="property-stat">
+                            <svg viewBox="0 0 24 24"><path d="M4 12h16v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4z"/><path d="M4 12V7a2 2 0 0 1 2-2h1v2"/><line x1="2" y1="18" x2="22" y2="18"/></svg>
+                            {{.Baths}} Baths
+                        </div>
+                        <div class="property-stat">
+                            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                            {{.SqFt}} sqft
+                        </div>
+                    </div>
+                    <div class="property-footer">
+                        <div class="property-price">
+                            {{if eq .Listing "sale"}}
+                            {{.PriceFormatted}}
+                            {{else}}
+                            {{.PriceFormatted}}<small>/{{.RentPeriod}}</small>
+                            {{end}}
+                        </div>
+                        {{if eq .Listing "sale"}}
+                        <button class="btn-action buy" onclick="openPaymentModal('{{.ID}}', 'buy')">Buy Now</button>
+                        {{else}}
+                        <button class="btn-action rent" onclick="openPaymentModal('{{.ID}}', 'rent')">Rent Now</button>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </main>
+
+    <!-- ========= PAYMENT MODAL ========= -->
+    <div id="paymentModal" class="modal-overlay" onclick="handleOverlayClick(event)">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-kicker" id="modalKicker">Checkout</div>
+                    <div class="modal-title" id="modalTitle">Payment</div>
+                </div>
+                <button class="modal-close" onclick="closePaymentModal()" aria-label="Close">×</button>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- Payment form view -->
+                <div id="paymentFormView">
+                    <div class="modal-summary">
+                        <div>
+                            <div class="modal-summary-label" id="summaryLabel">Amount Due</div>
+                            <div class="modal-summary-amount" id="summaryAmount">$0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="card-demo-hint">
+                        <strong>Demo checkout —</strong> no real payment is processed. Enter any numbers.
+                    </div>
+
+                    <form id="paymentForm" onsubmit="return submitPayment(event)">
+                        <div class="modal-field">
+                            <label class="modal-label" for="cardName">Name on Card</label>
+                            <input type="text" id="cardName" class="modal-input" placeholder="Jane Doe" required>
+                        </div>
+
+                        <div class="modal-field">
+                            <label class="modal-label" for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" class="modal-input" placeholder="4242 4242 4242 4242" maxlength="19" inputmode="numeric" required>
+                        </div>
+
+                        <div class="modal-field-row">
+                            <div class="modal-field">
+                                <label class="modal-label" for="cardExpiry">Expiry Date</label>
+                                <input type="text" id="cardExpiry" class="modal-input" placeholder="MM/YY" maxlength="5" required>
+                            </div>
+                            <div class="modal-field">
+                                <label class="modal-label" for="cardCvc">CVC</label>
+                                <input type="text" id="cardCvc" class="modal-input" placeholder="123" maxlength="4" inputmode="numeric" required>
+                            </div>
+                        </div>
+
+                        <div class="modal-actions">
+                            <button type="button" class="btn-cancel" onclick="closePaymentModal()">Cancel</button>
+                            <button type="submit" class="btn-pay" id="payButton">Pay Now →</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Success view -->
+                <div id="paymentSuccessView" class="success-view">
+                    <div class="success-icon-lg">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                    <h3 id="successMessage">House has been bought!</h3>
+                    <p id="successSubMessage">Thank you for your purchase. A confirmation has been recorded.</p>
+                    <button type="button" class="btn-pay" style="width:100%;" onclick="closePaymentModal()">Done</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var currentProperty = null;
+        var currentAction = null;
+
+        var PROPERTIES = {
+            {{range $i, $p := .Properties}}{{if $i}},{{end}}"{{$p.ID}}": {
+                title: {{$p.Title}},
+                price: {{$p.PriceFormatted}},
+                listing: {{$p.Listing}},
+                period: {{$p.RentPeriod}}
+            }{{end}}
+        };
+
+        function filterProperties(filter, btn) {
+            document.querySelectorAll('.filter-tab').forEach(function (t) { t.classList.remove('active'); });
+            btn.classList.add('active');
+            document.querySelectorAll('.property-card').forEach(function (card) {
+                if (filter === 'all' || card.getAttribute('data-listing') === filter) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function openPaymentModal(propertyId, action) {
+            var prop = PROPERTIES[propertyId];
+            if (!prop) return;
+            currentProperty = propertyId;
+            currentAction = action;
+
+            document.getElementById('paymentFormView').style.display = '';
+            document.getElementById('paymentSuccessView').style.display = 'none';
+            document.getElementById('paymentForm').reset();
+
+            if (action === 'buy') {
+                document.getElementById('modalKicker').textContent = 'Purchase Checkout';
+                document.getElementById('modalTitle').textContent = prop.title;
+                document.getElementById('summaryLabel').textContent = 'Purchase Price';
+                document.getElementById('summaryAmount').textContent = prop.price;
+                document.getElementById('payButton').textContent = 'Pay & Buy →';
+            } else {
+                document.getElementById('modalKicker').textContent = 'Rental Checkout';
+                document.getElementById('modalTitle').textContent = prop.title;
+                document.getElementById('summaryLabel').textContent = 'Monthly Rent';
+                document.getElementById('summaryAmount').textContent = prop.price + ' / ' + prop.period;
+                document.getElementById('payButton').textContent = 'Pay & Rent →';
+            }
+
+            document.getElementById('paymentModal').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('open');
+            document.body.style.overflow = '';
+            currentProperty = null;
+            currentAction = null;
+        }
+
+        function handleOverlayClick(e) {
+            if (e.target === document.getElementById('paymentModal')) {
+                closePaymentModal();
+            }
+        }
+
+        function submitPayment(e) {
+            e.preventDefault();
+            if (!currentProperty || !currentAction) return false;
+
+            var endpoint = currentAction === 'buy' ? '/buy' : '/rent';
+            var body = new URLSearchParams();
+            body.set('property_id', currentProperty);
+
+            var payButton = document.getElementById('payButton');
+            payButton.disabled = true;
+            payButton.textContent = 'Processing…';
+
+            fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body.toString()
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    var prop = PROPERTIES[currentProperty];
+                    document.getElementById('paymentFormView').style.display = 'none';
+                    document.getElementById('paymentSuccessView').style.display = 'block';
+
+                    if (currentAction === 'buy') {
+                        document.getElementById('successMessage').textContent = prop.title + ' has been bought!';
+                        document.getElementById('successSubMessage').textContent = 'Congratulations on your new home. A confirmation has been recorded.';
+                    } else {
+                        document.getElementById('successMessage').textContent = prop.title + ' has been rented successfully!';
+                        document.getElementById('successSubMessage').textContent = 'Your rental payment was processed. Enjoy your new place.';
+                    }
+
+                    payButton.disabled = false;
+                    payButton.textContent = currentAction === 'buy' ? 'Pay & Buy →' : 'Pay & Rent →';
+                })
+                .catch(function () {
+                    payButton.disabled = false;
+                    payButton.textContent = currentAction === 'buy' ? 'Pay & Buy →' : 'Pay & Rent →';
+                    alert('Something went wrong. Please try again.');
+                });
+
+            return false;
+        }
+
+        // Auto-format card number with spaces
+        document.addEventListener('DOMContentLoaded', function () {
+            var cardNumber = document.getElementById('cardNumber');
+            cardNumber.addEventListener('input', function () {
+                var digits = this.value.replace(/\D/g, '').slice(0, 16);
+                this.value = digits.replace(/(.{4})/g, '$1 ').trim();
+            });
+
+            var cardExpiry = document.getElementById('cardExpiry');
+            cardExpiry.addEventListener('input', function () {
+                var digits = this.value.replace(/\D/g, '').slice(0, 4);
+                if (digits.length > 2) {
+                    this.value = digits.slice(0, 2) + '/' + digits.slice(2);
+                } else {
+                    this.value = digits;
+                }
+            });
+
+            var cardCvc = document.getElementById('cardCvc');
+            cardCvc.addEventListener('input', function () {
+                this.value = this.value.replace(/\D/g, '').slice(0, 4);
+            });
+        });
+    </script>
+
+</body>
+
+</html>
