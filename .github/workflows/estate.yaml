@@ -1,0 +1,52 @@
+name: Go Test, Build and Download Artifact
+
+on:
+  push:
+    branches:
+      - feature-fix  
+
+jobs:
+  test:
+    name: Test application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+
+      - name: Run tests
+        run: go test ./...
+
+  build:
+    name: Build and upload artifact
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+
+      - name: Build binary
+        run: go build -o DevEstate .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DevEstate-binary
+          path: DevEstate
+
+  download:
+    name: Download artifact
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: DevEstate-binary
+
+      - name: Verify artifact
+        run: ls -la
