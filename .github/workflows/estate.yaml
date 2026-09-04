@@ -3,7 +3,7 @@ name: Go Test, Build and Download Artifact
 on:
   push:
     branches:
-      - feature-fix  
+      - feature-fisayo
 
 jobs:
   test:
