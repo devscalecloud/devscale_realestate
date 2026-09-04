@@ -1,0 +1,59 @@
+name: Real Estate Go CI
+on:
+  push:
+    branches:
+      - feature/automation-abayomi
+
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.23'
+      - name: Run tests
+        run: go test ./...
+
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Go
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.23'
+
+      - name: Build application
+        run: go build -o realestate ./...
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: realestate-binary
+          path: realestate-binary
+
+
+
+  download:
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: download binary artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: realestate-binary
+          path: realestate-binary        
