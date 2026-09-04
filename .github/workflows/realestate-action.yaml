@@ -40,8 +40,8 @@ jobs:
       - name: Upload binary artifact
         uses: actions/upload-artifact@v7
         with:
-          name: realestate-binary
-          path: realestate-binary
+          name: realestate
+          path: realestate
 
 
 
@@ -55,6 +55,6 @@ jobs:
       - name: download binary artifact
         uses: actions/download-artifact@v7
         with:
-          name: realestate-binary
-          path: realestate-binary
+          name: realestate
+          path: realestate
         
