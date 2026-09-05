@@ -6,7 +6,7 @@ Users log in (or register), browse properties for sale and for rent, buy or rent
 a property through a mock card-payment modal, and see a success confirmation.
 No real payments are processed — this is a demo application.
 
-## Run
+## Runing now2
 
 ```
 go run .
