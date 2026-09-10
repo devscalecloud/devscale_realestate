@@ -1,0 +1,42 @@
+name: Go Test, Build, and Artifact Workflow
+on:
+  push:
+    branches:
+      - feature/github-actions-chimezie
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'   # replace with the exact version from Step 6's go.mod
+      - name: Run tests
+        run: go test ./...
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'   # same version as above, kept consistent across jobs
+      - name: Build binary
+        run: go build -o devscale_realestate_app .
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: devscale_realestate_app
+          path: devscale_realestate_app
+  download:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: devscale_realestate_app
