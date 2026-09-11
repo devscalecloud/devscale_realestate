@@ -3,7 +3,7 @@ on: push
 
 
 jobs:
-  first-job:
+  test_the_application:    
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository using actions/checkout@v7
@@ -14,13 +14,12 @@ jobs:
         with:
           go-version: '1.25' # The Go version to download (if necessary) and use.
 
-      - name: Step that runs go ttest
+      - name: Step that runs go test
         run: go test ./...
 
 
-  second-job:
+  build_app_and_upload_artifact:
     runs-on: ubuntu-latest
-    needs: first-job
     steps:
       - name: Checkout repository using actions/checkout@v7
         uses: actions/checkout@v7
@@ -39,9 +38,9 @@ jobs:
           name: myapp_realestate
           path: myapp_realestate
 
-  third-job:
+  download_artifact:
     runs-on: ubuntu-latest
-    needs: [first-job, second-job]
+    needs: [build_app_and_upload_artifact]
     steps:
       - name: Checkout repository using actions/checkout@v7
         uses: actions/checkout@v7
@@ -51,12 +50,9 @@ jobs:
         with:
           go-version: '1.25' # The Go version to download (if necessary) and use.
 
-      - name: Run go fmt to check for formatting issues.
-        run: go fmt ./...
-
-
-
-
-
+      - name: download the compiled executable artifact.
+        uses: actions/download-artifact@v8
+        with:
+          name: myapp_realestate
 
 
