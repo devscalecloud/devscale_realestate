@@ -1,0 +1,47 @@
+name: github actions assignment
+on: push
+
+jobs:
+  first-job:    
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository using actions/checkout@v7
+        uses: actions/checkout@v7
+
+      - name: Install Go (setup Go on the runner). using actions/setup-go@v7
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.25' # The Go version to download (if necessary) and use.
+
+      - name: Step that runs go ttest
+        run: go test ./...
+
+
+  second-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository using actions/checkout@v7
+        uses: actions/checkout@v7
+
+      - name: Install Go (setup Go on the runner). using actions/setup-go@v7
+        uses: actions/setup-go@v7
+        with:
+          go-version: '1.25' # The Go version to download (if necessary) and use.
+      
+      - name: Build the Go code into a compiled executable artifact.
+        run: go build -o myapp_realestate .
+
+      - name: Upload the compiled executable as an artifact.
+        uses: actions/upload-artifact@v7
+        with:
+          name: myapp_realestate
+          path: myapp_realestate
+
+
+
+
+
+
+
+
+
